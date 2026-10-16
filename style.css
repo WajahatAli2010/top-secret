@@ -990,3 +990,13 @@
     .chaos-note { max-width:270px; margin-top:15px; font-size:10px; }
   }
 
+
+
+/* Cousin questionnaire trap */
+.modal.questionnaire-open .modal-label { display: none; }
+.modal.questionnaire-open .modal-card { width: min(560px, 100%); padding: clamp(24px, 5vw, 40px); }
+.modal.questionnaire-open h4 { font-size: clamp(30px, 6vw, 46px); line-height: 1.05; margin: 0 0 24px; }
+.modal.questionnaire-open #modalText { margin: 0; }
+.question-options { display: grid; gap: 10px; }
+.question-options .answer-option { width: 100%; text-align: left; white-space: normal; padding: 14px 16px; font-size: 11px; letter-spacing: .08em; }
+.question-options .answer-option:disabled { opacity: .7; cursor: default; border-color: rgba(255,105,135,.5); color: #ff91a7; }
