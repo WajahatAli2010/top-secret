@@ -39,22 +39,29 @@
         return;
       }
       if (btn.dataset.question) {
-        document.getElementById('modalTitle').textContent = 'One question.';
-        modalText.innerHTML = 'What is the correct answer to this question?<br><br><strong>Why is she like this?</strong><br><br><button class="fake-btn" data-wrong="true">Yes</button> <button class="fake-btn" data-wrong="true">No</button> <button class="fake-btn" data-wrong="true">Maybe</button>';
+        document.getElementById('modalTitle').textContent = btn.dataset.prompt || 'Questionnaire';
+        modal.classList.add('questionnaire-open');
+        const options = (btn.dataset.options || 'Obviously me|Definitely not me|The cousin who is asking').split('|');
+        modalText.className = 'question-options';
+        modalText.innerHTML = options.map(option => '<button class="fake-btn answer-option" type="button" data-wrong="true"></button>').join('');
+        modalText.querySelectorAll('[data-wrong]').forEach((option, index) => {
+          option.textContent = options[index];
+          option.addEventListener('click', () => {
+            option.textContent = 'Wrong answer 💀';
+            option.disabled = true;
+            option.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}], {duration:260});
+          });
+        });
         modal.classList.add('open');
-        modalText.querySelectorAll('[data-wrong]').forEach(option => option.addEventListener('click', () => {
-          option.textContent = 'Wrong.';
-          option.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}], {duration:260});
-        }));
         return;
       }
       modalText.textContent = btn.dataset.joke || 'This button was suspicious from the beginning.';
       modal.classList.add('open');
     });
   });
-  document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('open'));
-  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
-  addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+  document.getElementById('closeModal').addEventListener('click', () => { modal.classList.remove('open', 'questionnaire-open'); modalText.className = ''; });
+  modal.addEventListener('click', e => { if (e.target === modal) { modal.classList.remove('open', 'questionnaire-open'); modalText.className = ''; } });
+  addEventListener('keydown', e => { if (e.key === 'Escape') { modal.classList.remove('open', 'questionnaire-open'); modalText.className = ''; } });
 
   const ending = document.getElementById('ending');
   const blackout = document.getElementById('finaleBlackout');
