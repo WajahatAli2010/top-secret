@@ -1035,3 +1035,23 @@
     grid-column:1; margin-top:0!important;
   }
 }
+
+
+/* Sixth memory frame: a wide family photo */
+.frame.family-frame {
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: 900px;
+  justify-self: center;
+  margin-top: 24px !important;
+}
+.frame.family-frame .photo {
+  aspect-ratio: 16 / 9;
+}
+@media (max-width: 860px) {
+  .frame.family-frame {
+    grid-column: 1 / -1;
+    max-width: 100%;
+    margin-top: 12px !important;
+  }
+}
