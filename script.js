@@ -155,6 +155,20 @@ const birthdayScrollReveal = document.getElementById('birthdayScrollReveal');
   }, {passive:true});
 
   const birthdaySound = document.getElementById('birthdaySound');
+  const soundRequest = document.getElementById('soundRequest');
+  const soundChoiceYes = document.getElementById('soundChoiceYes');
+  const soundChoiceNo = document.getElementById('soundChoiceNo');
+  let soundConsent = null;
+
+  function closeSoundRequest(consent) {
+    soundConsent = consent;
+    soundRequest.classList.add('dismissed');
+    soundRequest.setAttribute('aria-hidden', 'true');
+    // Choosing sound is only permission for later; it must not start playback here.
+  }
+
+  soundChoiceYes.addEventListener('click', () => closeSoundRequest(true));
+  soundChoiceNo.addEventListener('click', () => closeSoundRequest(false));
 
   function attemptBirthdayAudio(reset = false) {
     if (!birthdayAudio) return Promise.resolve(false);
@@ -194,10 +208,15 @@ const birthdayScrollReveal = document.getElementById('birthdayScrollReveal');
       birthdayScrollReveal.classList.remove('visible');
       birthdayScrollReveal.setAttribute('aria-hidden','true');
 
-      // This call happens directly inside the user's wheel event.
+      // Only start the song at the chaos reveal if she opted in on entry.
       if (birthdayAudio) {
         birthdayAudio.pause();
-        attemptBirthdayAudio(true);
+        if (soundConsent === true) {
+          attemptBirthdayAudio(true);
+        } else {
+          birthdayAudio.currentTime = 0;
+          if (birthdaySound) birthdaySound.classList.add('visible');
+        }
       }
 
       if (birthdayCatVideo) {
