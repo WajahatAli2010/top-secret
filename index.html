@@ -6,8 +6,31 @@
 <meta name="theme-color" content="#090908">
 <title>The WEBY Birthday</title>
 <link rel="stylesheet" href="./style.css">
+
+<style id="photo-loading-screen-style">
+  #photoLoadingScreen {
+    position: fixed; inset: 0; z-index: 99999; display: grid; place-items: center;
+    background: #090908; color: #f7f0df; opacity: 1; visibility: visible;
+    transition: opacity .55s ease, visibility .55s ease;
+  }
+  #photoLoadingScreen.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+  #photoLoadingScreen .photo-loader-content { width: min(320px, 82vw); text-align: center; }
+  #photoLoadingScreen .photo-loader-title { font: 600 12px/1.5 sans-serif; letter-spacing: .22em; text-transform: uppercase; }
+  #photoLoadingScreen .photo-loader-track { height: 2px; margin-top: 22px; overflow: hidden; background: #343128; }
+  #photoLoadingScreen .photo-loader-bar { display: block; width: 0; height: 100%; background: #d7b76b; transition: width .2s ease; }
+  #photoLoadingScreen .photo-loader-count { margin-top: 10px; color: #b8b09e; font: 11px/1.5 sans-serif; letter-spacing: .12em; }
+  @media (prefers-reduced-motion: reduce) { #photoLoadingScreen { transition: none; } }
+</style>
 </head>
 <body>
+
+<div id="photoLoadingScreen" role="status" aria-live="polite" aria-label="Loading photos">
+  <div class="photo-loader-content">
+    <div class="photo-loader-title">Loading the memories</div>
+    <div class="photo-loader-track"><span class="photo-loader-bar" id="photoLoaderBar"></span></div>
+    <div class="photo-loader-count" id="photoLoaderCount">0 / 6 PHOTOS</div>
+  </div>
+</div>
 <main class="app-root">
   <div class="cursor-glow" id="cursorGlow"></div>
   <div class="gold-blob" aria-hidden="true"></div>
@@ -235,6 +258,42 @@
     </div>
   </div>
 </main>
+
+<script id="photo-loading-screen-script">
+(() => {
+  const screen = document.getElementById('photoLoadingScreen');
+  const bar = document.getElementById('photoLoaderBar');
+  const count = document.getElementById('photoLoaderCount');
+  if (!screen || !bar || !count) return;
+  const photos = [...document.querySelectorAll('.frames .photo img')];
+  if (!photos.length) { screen.classList.add('is-done'); return; }
+  let finished = 0;
+  let dismissed = false;
+  const update = () => {
+    finished = Math.min(finished, photos.length);
+    bar.style.width = ((finished / photos.length) * 100) + '%';
+    count.textContent = finished + ' / ' + photos.length + ' PHOTOS';
+    if (finished === photos.length && !dismissed) {
+      dismissed = true;
+      window.setTimeout(() => screen.classList.add('is-done'), 180);
+      window.setTimeout(() => screen.remove(), 850);
+    }
+  };
+  const settle = (img) => {
+    if (img.dataset.loadingScreenSettled === 'true') return;
+    img.dataset.loadingScreenSettled = 'true';
+    finished++;
+    update();
+  };
+  photos.forEach(img => {
+    img.addEventListener('load', () => settle(img), { once: true });
+    img.addEventListener('error', () => settle(img), { once: true });
+    img.loading = 'eager';
+    if (img.complete) settle(img);
+  });
+  update();
+})();
+</script>
 <script src="./script.js" defer></script>
 </body>
 </html>
