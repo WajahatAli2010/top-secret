@@ -174,7 +174,40 @@ const birthdayScrollReveal = document.getElementById('birthdayScrollReveal');
     // Choosing sound is only permission for later; it must not start playback here.
   }
 
-  soundChoiceYes.addEventListener('click', () => closeSoundRequest(true));
+  // On iOS Safari (including iPhone 16 Plus), consent alone does not unlock
+  // audio for playback much later. Prime this exact audio element during the tap,
+  // silently, so the finale can start it without a second tap.
+  function primeBirthdayAudioFromGesture() {
+    if (!birthdayAudio) return;
+    const wasMuted = birthdayAudio.muted;
+    birthdayAudio.muted = true;
+    let primePromise;
+    try {
+      primePromise = birthdayAudio.play();
+    } catch (_) {
+      birthdayAudio.muted = wasMuted;
+      return;
+    }
+    if (primePromise && typeof primePromise.then === 'function') {
+      primePromise.then(() => {
+        birthdayAudio.pause();
+        try { birthdayAudio.currentTime = 0; } catch (_) {}
+        birthdayAudio.muted = wasMuted;
+      }).catch(() => {
+        birthdayAudio.muted = wasMuted;
+      });
+    } else {
+      birthdayAudio.pause();
+      try { birthdayAudio.currentTime = 0; } catch (_) {}
+      birthdayAudio.muted = wasMuted;
+    }
+  }
+
+  soundChoiceYes.addEventListener('click', () => {
+    soundConsent = true;
+    primeBirthdayAudioFromGesture();
+    closeSoundRequest(true);
+  });
 
   // The decline button is a harmless, impossible-to-catch prank.
   // Move it synchronously as soon as the pointer approaches; it never declines.
