@@ -959,3 +959,34 @@
     .birthday-close { margin-top:23px; }
     .birthday-cat { width:125px; right:-6px; left:auto; bottom:4px; }
   }
+
+  /* Entry sound request: consent now, music only at the finale. */
+  .sound-request {
+    position:fixed; inset:0; z-index:300; display:grid; place-items:center; padding:22px;
+    background:rgba(9,8,15,.82); backdrop-filter:blur(14px);
+    opacity:1; visibility:visible; transition:opacity .35s ease,visibility .35s ease;
+  }
+  .sound-request.dismissed { opacity:0; visibility:hidden; pointer-events:none; }
+  .sound-request-card {
+    width:min(470px,100%); padding:clamp(24px,5vw,38px);
+    background:#211839; color:#fff9f0; border:1px solid rgba(255,255,255,.2);
+    box-shadow:10px 10px 0 rgba(255,95,162,.3);
+  }
+  .sound-request-eyebrow { color:#ffe15a; font-size:9px; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
+  .sound-request-card h2 { margin:15px 0 10px; font-size:clamp(28px,6vw,42px); line-height:.98; letter-spacing:-.06em; text-transform:uppercase; }
+  .sound-request-card p { color:#bcb5cb; font-size:13px; line-height:1.7; }
+  .sound-request-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
+  .sound-choice { border:1px solid rgba(255,255,255,.24); padding:12px 14px; border-radius:4px; cursor:pointer; font-size:10px; font-weight:900; }
+  .sound-choice-yes { background:#ffe15a; color:#171126; border-color:#ffe15a; }
+  .sound-choice-no { background:transparent; color:#fff9f0; }
+  .sound-choice:hover { transform:translateY(-2px); }
+  .chaos-note {
+    max-width:440px; margin:18px auto 0; color:#4c4c55; font-size:11px; font-weight:700;
+    line-height:1.5; letter-spacing:.02em;
+  }
+  @media (max-width:560px) {
+    .sound-request-actions { flex-direction:column; }
+    .sound-choice { width:100%; }
+    .chaos-note { max-width:270px; margin-top:15px; font-size:10px; }
+  }
+
