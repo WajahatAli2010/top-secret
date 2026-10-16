@@ -191,7 +191,8 @@
       <div class="birthday-kicker">BREAKING NEWS: SHE GOT OLDER</div>
       <h2 class="birthday-title">HAPPY<br>BIRTHDAY!!!</h2>
       <div class="birthday-sub">🎂 <span>you survived another year</span> 🎂</div>
-      <audio class="birthday-audio" id="birthdayAudio" src="./birthday.mp3" preload="auto" autoplay loop></audio>
+      <audio class="birthday-audio" id="birthdayAudio" src="./birthday.mp3" preload="auto" loop></audio>
+      <p class="chaos-note">Sorry I couldn’t give you a real present. This is all I could do. ❤️</p>
       <button class="birthday-close" id="birthdayClose">OKAY I GET IT 😭</button>
       <button class="birthday-sound" id="birthdaySound" type="button">▶ PLAY BIRTHDAY SONG</button>
     </div>
@@ -200,6 +201,18 @@
       <canvas id="birthdayCatCanvas"></canvas>
     </div>
   </section>
+
+  <div class="sound-request" id="soundRequest" role="dialog" aria-modal="true" aria-labelledby="soundRequestTitle">
+    <div class="sound-request-card">
+      <div class="sound-request-eyebrow">A tiny heads-up</div>
+      <h2 id="soundRequestTitle">Save a little sound for the chaos?</h2>
+      <p>The birthday song won’t play now. If you say yes, it’ll start when the final chaos reveal arrives.</p>
+      <div class="sound-request-actions">
+        <button class="sound-choice sound-choice-yes" id="soundChoiceYes" type="button">Yes, at the finale 🎵</button>
+        <button class="sound-choice sound-choice-no" id="soundChoiceNo" type="button">Keep it silent</button>
+      </div>
+    </div>
+  </div>
 
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-card">
