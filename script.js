@@ -175,7 +175,31 @@ const birthdayScrollReveal = document.getElementById('birthdayScrollReveal');
   }
 
   soundChoiceYes.addEventListener('click', () => closeSoundRequest(true));
-  soundChoiceNo.addEventListener('click', () => closeSoundRequest(false));
+
+  // The decline button is a harmless, impossible-to-catch prank.
+  // Move it synchronously as soon as the pointer approaches; it never declines.
+  function teleportDeclineButton() {
+    if (!soundChoiceNo || soundRequest.classList.contains('dismissed')) return;
+    const rect = soundChoiceNo.getBoundingClientRect();
+    const margin = 12;
+    const maxLeft = Math.max(margin, innerWidth - rect.width - margin);
+    const maxTop = Math.max(margin, innerHeight - rect.height - margin);
+    const left = margin + Math.random() * Math.max(0, maxLeft - margin);
+    const top = margin + Math.random() * Math.max(0, maxTop - margin);
+    soundChoiceNo.classList.add('teleporting');
+    soundChoiceNo.style.left = Math.round(left) + 'px';
+    soundChoiceNo.style.top = Math.round(top) + 'px';
+  }
+  soundChoiceNo.addEventListener('pointerenter', teleportDeclineButton);
+  soundChoiceNo.addEventListener('pointerdown', event => {
+    event.preventDefault();
+    teleportDeclineButton();
+  });
+  soundChoiceNo.addEventListener('click', event => {
+    event.preventDefault();
+    teleportDeclineButton();
+  });
+  soundChoiceNo.addEventListener('focus', teleportDeclineButton);
 
   function attemptBirthdayAudio(reset = false) {
     if (!birthdayAudio) return Promise.resolve(false);
