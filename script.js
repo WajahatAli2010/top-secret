@@ -227,9 +227,9 @@ const birthdayScrollReveal = document.getElementById('birthdayScrollReveal');
     });
   }
 
-  addEventListener('wheel', e => {
-    if (finaleStarted || !birthdayScrollReady || e.deltaY <= 0) return;
-    birthdayScrollAmount = Math.min(birthdayScrollTarget, birthdayScrollAmount + e.deltaY);
+  function advanceBirthdayScroll(amount) {
+    if (finaleStarted || !birthdayScrollReady || amount <= 0) return;
+    birthdayScrollAmount = Math.min(birthdayScrollTarget, birthdayScrollAmount + amount);
     const percent = Math.round((birthdayScrollAmount / birthdayScrollTarget) * 100);
     birthdayProgress.style.width = percent + '%';
     birthdayProgressText.textContent = percent + '%';
@@ -258,6 +258,33 @@ const birthdayScrollReveal = document.getElementById('birthdayScrollReveal');
 
       startFinale();
     }
+  }
+
+  // Mouse-wheel support for desktop.
+  addEventListener('wheel', e => {
+    advanceBirthdayScroll(e.deltaY);
+  }, {passive:true});
+
+  // Touch support: mobile browsers do not fire wheel events for finger swipes.
+  let birthdayTouchY = null;
+  addEventListener('touchstart', e => {
+    if (!birthdayScrollReady || !e.touches.length) return;
+    birthdayTouchY = e.touches[0].clientY;
+  }, {passive:true});
+
+  addEventListener('touchmove', e => {
+    if (finaleStarted || !birthdayScrollReady || birthdayTouchY === null || !e.touches.length) return;
+    const currentY = e.touches[0].clientY;
+    const delta = birthdayTouchY - currentY;
+    birthdayTouchY = currentY;
+    if (delta > 0) {
+      e.preventDefault();
+      advanceBirthdayScroll(delta);
+    }
+  }, {passive:false});
+
+  addEventListener('touchend', () => {
+    birthdayTouchY = null;
   }, {passive:true});
 
   function startFinale() {
