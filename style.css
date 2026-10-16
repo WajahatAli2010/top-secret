@@ -993,6 +993,7 @@
 
 
 /* Cousin questionnaire trap */
+#modalText:not(.question-options) { color: #8c887f; line-height: 1.7; font-size: 13px; margin: 0 0 24px; }
 .modal.questionnaire-open .modal-label { display: none; }
 .modal.questionnaire-open .modal-card { width: min(560px, 100%); padding: clamp(24px, 5vw, 40px); }
 .modal.questionnaire-open h4 { font-size: clamp(30px, 6vw, 46px); line-height: 1.05; margin: 0 0 24px; }
